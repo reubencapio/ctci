@@ -1,12 +1,31 @@
 #include<iostream>
 #include<vector>
 #include<list>
+#include<iomanip>
 using namespace std;
 
 struct node{
     int data;
     node *right, *left;
 };
+
+	void printTree(node* p, int indent)
+	{
+		if (p != NULL) {
+			if (p->right) {
+				printTree(p->right, indent + 4);
+			}
+			if (indent) {
+				std::cout << std::setw(indent) << ' ';
+			}
+			if (p->right) std::cout << " /\n" << std::setw(indent) << ' ';
+			std::cout << p->data << "\n ";
+			if (p->left) {
+				std::cout << std::setw(indent) << ' ' << " \\\n";
+				printTree(p->left, indent + 4);
+			}
+		}
+	}
 
 void createMinimalBst(node* &root, int arr[], int start, int end){
     if(start>end)
@@ -30,13 +49,11 @@ void findLevelLinkedLists(vector<list<node*> > &res, node* root){
     int depth = 0;
     while(!res[depth].empty()){
         list<node*> l;
-        list<node*>::iterator iter;
-        for(iter = res[depth].begin(); iter!=res[depth].end(); iter++ ){
-            node *ptr = *iter;
-            if(ptr->left)
-                l.push_back(ptr->left);
-            if(ptr->right)
-                l.push_back(ptr->right);
+        for(auto iter : res[depth] ){
+            if(iter->left)
+                l.push_back(iter->left);
+            if(iter->right)
+                l.push_back(iter->right);
         }
         res.push_back(l);
         depth++;
@@ -44,13 +61,9 @@ void findLevelLinkedLists(vector<list<node*> > &res, node* root){
 }
 
 void printLevelLinkedLists(vector<list<node*> > res){
-    vector<list<node*> >::iterator iter;
-    for(iter = res.begin(); iter!= res.end(); iter++){
-        list<node*> li = *iter;
-        list<node*>::iterator it;
-        for(it = li.begin(); it!=li.end(); it++){
-            node* ptr = *it;
-            cout<<ptr->data<<" ";
+    for(auto llist:res){
+        for(nnode:llist){
+            cout<<nnode->data<<" ";
         }
         cout<<'\n';
     }
@@ -61,6 +74,7 @@ int main(){
     node* root;
     root = NULL;
     createMinimalBst(root, arr, 0, 8);
+    printTree(root, 0);
     vector<list<node*> > res;
     findLevelLinkedLists(res, root);
     printLevelLinkedLists(res);
